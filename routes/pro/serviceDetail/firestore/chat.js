@@ -40,7 +40,7 @@
 
 import Joi from "joi";
 import firebaseConfig from "../../../../config/firebase/firebaseConfig.js"; // contains db, admin
-import { Timestamp } from "firebase-admin/firestore";
+//import { Timestamp } from "firebase-admin/firestore";
 //import { FieldValue } from "firebase-admin/firestore";
 
 // Optional: FCM Notification sender (add when ready)
@@ -56,17 +56,17 @@ const schemaBody = Joi.object().keys({
 });
 
 const chat = async (req, res) => {
-  await schemaBody.validateAsync(req.body);
-  const { clientId, proId, text, localTime, mediaUrl, mediaType } = req.body;
-
+  
   try {
+    await schemaBody.validateAsync(req.body);
+    const { clientId, proId, text, localTime, mediaUrl, mediaType } = req.body;
     const senderId = clientId; // assuming client is the sender
-    const receiverId = proId;
+   // const receiverId = proId;
     const chatId = clientId < proId ? `${clientId}_${proId}` : `${proId}_${clientId}`;
 
     const message = {
       senderId,
-      senderRole:"client",
+      senderRole:"pro",
       text: text || "",
       mediaUrl: mediaUrl || null,
       mediaType: mediaType || null,
@@ -106,7 +106,7 @@ const chat = async (req, res) => {
     return res.status(200).json({ success: true, message: "Message sent successfully!" });
   } catch (error) {
     console.error("Send Message Error:", error);
-    res.status(400).json({ error: "Failed to send message." });
+   return res.status(400).json({ error: error.message }); 
   }
 };
 
