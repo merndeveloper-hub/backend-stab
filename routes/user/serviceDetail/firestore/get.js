@@ -74,11 +74,11 @@ const getChatMessages = async (req, res) => {
       .onSnapshot((messagesSnapshot) => {
         console.log(messagesSnapshot, "messagesSnapshot");
 
-        if (messagesSnapshot.empty) {
-          return res
-            .status(404)
-            .json({ success: false, message: "No messages found" });
-        }
+        // if (messagesSnapshot.empty) {
+        //   return res
+        //     .status(404)
+        //     .json({ success: false, message: "No messages found" });
+        // }
 
         // Fetch all messages from the snapshot
         const messages = messagesSnapshot.docs.map((doc) => doc.data()); // Get all messages
@@ -116,7 +116,7 @@ const getChatMessages = async (req, res) => {
     // });
   } catch (error) {
     console.error("Get Chat Messages Error:", error);
-    return res.status(500).json({ error: "Failed to fetch messages." });
+    return res.status(400).json({ error: error.message });
   }
 };
 
