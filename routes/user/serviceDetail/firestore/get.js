@@ -81,12 +81,14 @@ const getChatMessages = async (req, res) => {
         // }
 
         // Fetch all messages from the snapshot
-        const messages = messagesSnapshot.docs.map((doc) => doc.data()); // Get all messages
-
-        console.log(messages, "all messages");
+        let messages = messagesSnapshot.docs.map((doc) => doc.data()); // Get all messages
 
         return res.status(200).json({ success: true, messages });
+       
+
       });
+  
+      
     //  const db = firebaseConfig.db;
 
     // let queryRef = db

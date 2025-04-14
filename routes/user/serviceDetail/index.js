@@ -3,7 +3,7 @@ import express from "express";
 
 //----------Firebase-------------//
 
-import chat from "./firestore/chat.js";
+import sendChat from "./firestore/chat.js";
 import getChat from "./firestore/get.js";
 
 import cancelledBooking from "./bookedServiceCancel.js";
@@ -26,7 +26,7 @@ router.put("/completed/:id", completedBookedService);
 
 
 //---------pro chat to user----------//
-router.post("/chat", chat);
+router.post("/chat", sendChat);
 
 // get pro chat
 router.get("/conversation/:clientId/:proId", getChat);
