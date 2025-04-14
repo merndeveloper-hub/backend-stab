@@ -24,7 +24,7 @@ const sendChat = async (req, res) => {
     const { clientId, proId, text, localTime, mediaUrl, mediaType } = req.body;
     const senderId = clientId; // assuming client is the sender
    // const receiverId = proId;
-    const chatId =  `${clientId}_${proId}` 
+   const chatId = `${proId}_${clientId}`;
 
     const message = {
       senderId,
