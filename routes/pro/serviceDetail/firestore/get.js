@@ -1,46 +1,49 @@
 
-
-
 import firebaseConfig from "../../../../config/firebase/firebaseConfig.js";
 
 const getChatMessages = async (req, res) => {
   try {
     const { clientId, proId, limit = 30, lastVisibleTimestamp } = req.params;
 
-
     if (!clientId || !proId) {
       return res.status(400).json({ error: "clientId and proId are required." });
     }
 
     const chatId = `${proId}_${clientId}`;
-   
-    
-    firebaseConfig.db
-          .collection("chats")
-          .doc(chatId)
-          .collection("messages")
-        .orderBy("createdAt") // Order messages by timestamp
-          .onSnapshot((messagesSnapshot) => {
-            console.log(messagesSnapshot, "messagesSnapshot");
-    
-            // if (messagesSnapshot.empty) {
-            //   return res
-            //     .status(404)
-            //     .json({ success: false, message: "No messages found" });
-            // }
-    
-            // Fetch all messages from the snapshot
-            const messages = messagesSnapshot.docs.map((doc) => doc.data()); // Get all messages
-    
-            return  res.status(200).json({ success: true, messages });
-            
-    
-          })
-          
-  
+console.log(chatId,"chatId");
+
+    let queryRef = firebaseConfig.db
+      .collection("chats")
+      .doc(chatId)
+      .collection("messages")
+      .orderBy("createdAt", "desc")
+    //  .limit(Number(limit));
+
+    // if (lastVisibleTimestamp) {
+    //   const parsedTimestamp = new Date(lastVisibleTimestamp);
+    //   queryRef = queryRef.startAfter(parsedTimestamp);
+    // }
+
+    const snapshot = await queryRef.get();
+console.log(snapshot.docs,"snapshot");
+
+    const messages = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+      
+      
+    }));
+console.log(messages,"message");
+
+    return res.status(200).json({
+      success: true,
+      messages,
+     // lastVisible: messages.length > 0 ? messages[messages.length - 1].createdAt : null
+    });
+
   } catch (error) {
     console.error("Get Chat Messages Error:", error);
-    return res.status(400).json({ error: error.message }); 
+    return res.status(400).json({ error: error.message });
   }
 };
 

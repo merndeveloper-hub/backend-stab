@@ -25,7 +25,7 @@ if(status == "onGoing"){
       {
         $match: {
           userId: new mongoose.Types.ObjectId(id), // Match userId
-          status: { $in: ["Accepted", "Pending", "Requested", "OnGoing"] }, // Match status
+          status: { $in: ["Accepted", "Pending", "Requested", "OnGoing","Delivered"] }, // Match status
         },
       },
 

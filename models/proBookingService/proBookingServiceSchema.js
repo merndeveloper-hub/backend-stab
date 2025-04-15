@@ -114,7 +114,7 @@ const proBookingServiceSchema = new mongoose.Schema(
     }, 
     status: {
       type: schemaType.TypeString,
-      enum: ["Cancelled", "Accepted", "Completed", "OnGoing", "Pending","Rejected"],
+      enum: ["Cancelled", "Accepted", "Completed", "OnGoing", "Pending","Rejected","Delivered"],
       default: "OnGoing",
     },
      videoRoomName:{

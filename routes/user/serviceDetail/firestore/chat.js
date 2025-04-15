@@ -29,7 +29,7 @@ console.log(chatId,"chatId");
 
     const message = {
       senderId,
-      senderRole:"pro",
+      senderRole:"user",
       text: text || "",
       mediaUrl: mediaUrl || null,
       mediaType: mediaType || null,
