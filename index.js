@@ -13,6 +13,7 @@ import { Server } from "socket.io";
 import logger  from './logger/index.js' ;
 //import  arcjetMiddleware  from'./middleware/arcjet/index.js';
 import  errorMiddleware   from './middleware/error-middleware/index.js';
+import handleSocket from './routes/user/serviceDetail/firestore/socketHandlerSender.js';
 
 
 
@@ -69,15 +70,19 @@ app.get("/", async (req, res) => {
    return res.status(200).json({ status: 200, message: "FirstStab" });
  });
 
-io.on("connection", (socket) => {
-  //when connect
-  console.log("New client connected with id: ", socket.id);
+ // Socket.IO
 
-  //when disconnect
-  socket.on("disconnect", () => {
-    console.log("a user disconnected!", socket.id);
-  });
-});
+const socketNamespace = io.of('/api/v1/socket');
+handleSocket(socketNamespace);
+// io.on("connection", (socket) => {
+//   //when connect
+//   console.log("New client connected with id: ", socket.id);
+
+//   //when disconnect
+//   socket.on("disconnect", () => {
+//     console.log("a user disconnected!", socket.id);
+//   });
+// });
 
 
 app.use("*",(req,res) => {

@@ -29,6 +29,6 @@ router.put("/completed/:id", completedBookedService);
 router.post("/chat", sendChat);
 
 // get pro chat
-router.get("/conversation/:clientId/:proId", getChat);
+router.get("/conversation/:chatId", getChat);
 
 export default router;

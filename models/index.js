@@ -22,6 +22,9 @@ import address from "./address/index.js";
 import bookingDetail from "./booking/index.js";
 import proBookingService from "./proBookingService/index.js";
 import serviceDetail from "./serviceDetail/index.js";
+import chatRole from "./chatRole/index.js";
+import chatMessage from "./chatMessage/index.js";
+import chat from "./chat/index.js";
 
 
  const db = {};
@@ -57,6 +60,9 @@ db.serviceDetail=serviceDetail
  db.address=address
  db.proBookingService=proBookingService
  db.userPayment = userPayment
+ db.chatRole=chatRole
+ db.chatMessage=chatMessage
+ db.chat=chat
 // db.follow = require("./follow");
 // db.nft = require("./nft");
 // db.blog = require("./blog");

@@ -1,59 +1,85 @@
 
 
-import Joi from "joi";
-import firebaseConfig from "../../../../config/firebase/firebaseConfig.js"; // contains db, admin
-//import { Timestamp } from "firebase-admin/firestore";
-//import { FieldValue } from "firebase-admin/firestore";
+// import Joi from "joi";
+// import firebaseConfig from "../../../../config/firebase/firebaseConfig.js"; // contains db, admin
+// //import { Timestamp } from "firebase-admin/firestore";
+// import { FieldValue } from "firebase-admin/firestore";
+
+import { findOne, insertNewDocument } from "../../../../helpers/index.js";
 
 // Optional: FCM Notification sender (add when ready)
 // import { sendPushNotification } from "../../../../utils/fcm.js";
 
-const schemaBody = Joi.object().keys({
-  clientId: Joi.string().required(),
-  proId: Joi.string().required(),
-  text: Joi.string().allow("").optional(),
-  localTime: Joi.string().allow("").optional(),
-  mediaUrl: Joi.string().allow("").optional(),
-  mediaType: Joi.string().valid("image", "audio", "video", "file").optional(),
-});
+// const schemaBody = Joi.object().keys({
+//   clientId: Joi.string().required(),
+//   proId: Joi.string().required(),
+//   text: Joi.string().allow("").optional(),
+//   localTime: Joi.string().allow("").optional(),
+//   mediaUrl: Joi.string().allow("").optional(),
+//   mediaType: Joi.string().valid("image", "audio", "video", "file").optional(),
+// });
 
 const sendChat = async (req, res) => {
   
   try {
-    await schemaBody.validateAsync(req.body);
-    const { clientId, proId, text, localTime, mediaUrl, mediaType } = req.body;
-    const senderId = clientId; // assuming client is the sender
-   // const receiverId = proId;
-   const chatId = `${proId}_${clientId}`;
+   // await schemaBody.validateAsync(req.body);
+   // const { clientId, proId, text, localTime, mediaUrl, mediaType } = req.body;
 
-    const message = {
-      senderId,
-      senderRole:"pro",
-      text: text || "",
-      mediaUrl: mediaUrl || null,
-      mediaType: mediaType || null,
-      localTime: localTime || null,
-    createdAt:new Date(),
-     // timestamp: FieldValue.serverTimestamp(),
-      readBy: [senderId], // sender has read their own message
-    };
+// Create or get chat between two users
+//router.post('/get-or-create', async (req, res) => {
+  const { userId1, userId2 } = req.body;
+console.log(req.body,"body");
 
-    const db = firebaseConfig.db;
+  let chat = await findOne('chat',{participants: { $all: [userId1, userId2] }})
+console.log(chat,"chat");
 
-    // Add message to chat's messages subcollection
-    await db.collection("chats")
-      .doc(chatId)
-      .collection("messages")
-      .add(message);
+  // let chat = await Chat.findOne({
+  //   participants: { $all: [userId1, userId2] }
+  // });
 
-    // Update chat metadata
-    await db.collection("chats")
-      .doc(chatId)
-      .set({
-        participants: [clientId, proId],
-        lastMessage: text || mediaType || "media",
-     //  updatedAt: FieldValue.serverTimestamp()
-      }, { merge: true });
+  if (!chat) {
+    chat = await insertNewDocument('chat',{participants: [userId1, userId2]})
+    // chat = new Chat({ participants: [userId1, userId2] });
+    // await chat.save();
+  }
+console.log(chat,"insertChat");
+
+  res.json(chat);
+//});
+
+//     const senderId = clientId; // assuming client is the sender
+//    // const receiverId = proId;
+//    const chatId = `${proId}_${clientId}`;
+// console.log(chatId,"chatId");
+
+//     const message = {
+//       senderId,
+//       senderRole:"user",
+//       text: text || "",
+//       mediaUrl: mediaUrl || null,
+//       mediaType: mediaType || null,
+//       localTime: localTime || null,
+//     createdAt:new Date(),
+//       timestamp: FieldValue.serverTimestamp(),
+//       readBy: [senderId], // sender has read their own message
+//     };
+
+//     const db = firebaseConfig.db;
+
+//     // Add message to chat's messages subcollection
+//     await db.collection("chats")
+//       .doc(chatId)
+//       .collection("messages")
+//       .add(message);
+
+//     // Update chat metadata
+//     await db.collection("chats")
+//       .doc(chatId)
+//       .set({
+//         participants: [clientId, proId],
+//         lastMessage: text || mediaType || "media",
+//       updatedAt: FieldValue.serverTimestamp()
+//       }, { merge: true });
 
     // Optional: Push Notification Logic (Add if you need)
     // const receiver = await db.collection("users").doc(receiverId).get();
